@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Club - GECT Club Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f3f4f6;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 0 40px;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: #4b5563;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            background: #f3f4f6;
+            color: #2563eb;
+        }
+
+        .admin-badge {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 15px;
+            background: #f9fafb;
+            border-radius: 100px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #2563eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #ef4444;
+            color: white;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
+        .logout-btn {
+            background: none;
+            border: 1px solid #e5e7eb;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: #6b7280;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #fee2e2;
+            border-color: #fecaca;
+            color: #dc2626;
+        }
+
+        .back-btn {
+            background: white;
+            border: 1px solid #e5e7eb;
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin: 20px 40px;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #f9fafb;
+            transform: translateX(-3px);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px 40px;
+        }
+
+        .club-header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid #f0f0f0;
+        }
+
+        .club-title {
+            font-size: 32px;
+            color: #111827;
+            margin-bottom: 10px;
+        }
+
+        .club-description {
+            color: #6b7280;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .club-meta {
+            display: flex;
+            gap: 20px;
+        }
+
+        .club-meta span {
+            background: #f3f4f6;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid #f0f0f0;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .card-header h3 {
+            color: #111827;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .card-header .count {
+            background: #eef2ff;
+            color: #2563eb;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .members-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: transform 0.2s;
+        }
+
+        .member-item:hover {
+            transform: translateX(5px);
+            background: white;
+        }
+
+        .member-info h4 {
+            color: #111827;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .member-info p {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .member-joined {
+            color: #9ca3af;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .request-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .approve-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .approve-btn:hover {
+            background: #059669;
+        }
+
+        .reject-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .reject-btn:hover {
+            background: #dc2626;
+        }
+
+        .remove-member {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .remove-member:hover {
+            background: #fecaca;
+        }
+
+        .add-event-form {
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #374151;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-success {
+            background: #10b981;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .events-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .event-item {
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #2563eb;
+            transition: transform 0.2s;
+        }
+
+        .event-item:hover {
+            transform: translateX(5px);
+            background: white;
+        }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .event-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .event-date {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .event-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .event-registrations {
+            background: #dcfce7;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            color: #166534;
+            font-size: 14px;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .view-registrations {
+            background: #eef2ff;
+            color: #2563eb;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .view-registrations:hover {
+            background: #dbeafe;
+        }
+
+        .questions-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .question-item {
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #f59e0b;
+            transition: transform 0.2s;
+        }
+
+        .question-item:hover {
+            transform: translateX(5px);
+            background: white;
+        }
+
+        .question-item.answered {
+            border-left-color: #10b981;
+        }
+
+        .question-text {
+            color: #111827;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .question-meta {
+            color: #9ca3af;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        .answer-section {
+            margin-top: 15px;
+        }
+
+        .answer-section textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+
+        .answer-section textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .answer-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .answer-btn:hover {
+            background: #059669;
+        }
+
+        .existing-answer {
+            background: #dcfce7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .existing-answer p {
+            color: #166534;
+            margin-bottom: 5px;
+        }
+
+        .answer-date {
+            color: #059669;
+            font-size: 12px;
+        }
+
+        .admin-section {
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .admin-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .admin-tag {
+            background: #eef2ff;
+            color: #2563eb;
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remove-admin {
+            color: #ef4444;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #9ca3af;
+            padding: 40px 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="firebase-data.js"></script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-brand">GECT Club Hub</div>
+        <div class="nav-links">
+            <a href="club-admin-dashboard.html">Dashboard</a>
+            <span class="admin-badge">Club Admin</span>
+            <div class="user-menu">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar"></div>
+                    <span class="user-name" id="welcomeUser"></span>
+                </div>
+                <button class="notification-btn" onclick="viewNotifications()">
+                    Notifications
+                    <span class="notification-count" id="notificationCount">0</span>
+                </button>
+                <button class="logout-btn" onclick="logout()">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <button class="back-btn" onclick="goBack()"> Back to Dashboard</button>
+
+    <div class="container">
+        <div class="club-header">
+            <h1 class="club-title" id="clubName"></h1>
+            <p class="club-description" id="clubDescription"></p>
+            <div class="club-meta">
+                <span id="clubCategory"></span>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Left Column: Join Requests and Members -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>Join Requests</h3>
+                    <span class="count" id="requestCount">0</span>
+                </div>
+                <div class="members-list" id="requestsList"></div>
+                
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                    <div class="card-header">
+                        <h3>Club Members</h3>
+                        <span class="count" id="memberCount">0</span>
+                    </div>
+                    <div class="members-list" id="membersList"></div>
+                </div>
+                
+                <div class="admin-section">
+                    <h4 style="margin-bottom: 10px;">Club Administrators</h4>
+                    <div class="admin-list" id="adminsList"></div>
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <input type="email" id="newAdminEmail" placeholder="Add admin email" style="flex: 1; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px;">
+                        <button class="btn" onclick="addAdmin()">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle Column: Events Management -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>Events Management</h3>
+                    <span class="count" id="eventCount">0</span>
+                </div>
+                
+                <div class="add-event-form">
+                    <h4 style="margin-bottom: 15px;">Create New Event</h4>
+                    <div class="form-group">
+                        <label>Event Name</label>
+                        <input type="text" id="eventName" placeholder="e.g., Hackathon 2024">
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="text" id="eventDate" placeholder="e.g., March 15, 2024">
+                    </div>
+                    <div class="form-group">
+                        <label>Time</label>
+                        <input type="text" id="eventTime" placeholder="e.g., 10:00 AM">
+                    </div>
+                    <div class="form-group">
+                        <label>Venue</label>
+                        <input type="text" id="eventVenue" placeholder="e.g., Main Auditorium">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="eventDesc" rows="2" placeholder="Event description..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Registration Link (Optional)</label>
+                        <input type="url" id="eventFormLink" placeholder="https://forms.google.com/...">
+                    </div>
+                    <button class="btn btn-success" onclick="addEvent()">Create Event</button>
+                </div>
+
+                <div class="events-list" id="eventsList"></div>
+            </div>
+
+            <!-- Right Column: Questions -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>Student Questions</h3>
+                    <span class="count" id="questionCount">0</span>
+                </div>
+                <div class="questions-list" id="questionsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = getCurrentUser();
+        let currentClub = null;
+        let clubId = null;
+        
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        } else {
+            document.getElementById('welcomeUser').textContent = currentUser.name;
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        clubId = parseInt(urlParams.get('clubId'));
+
+        async function loadClub() {
+            currentClub = await getClubById(clubId);
+
+            if (!currentClub) {
+                window.location.href = 'club-admin-dashboard.html';
+                return;
+            }
+
+            // Check if user is admin of this club
+            let isAdmin = false;
+            if (currentClub.clubAdmins) {
+                for (let i = 0; i < currentClub.clubAdmins.length; i++) {
+                    if (currentClub.clubAdmins[i] === currentUser.email) {
+                        isAdmin = true;
+                        break;
+                    }
+                }
+            }
+            
+            if (!isAdmin) {
+                window.location.href = 'club-admin-dashboard.html';
+                return;
+            }
+
+            document.getElementById('clubName').innerText = currentClub.name;
+            document.getElementById('clubDescription').innerText = currentClub.description;
+            document.getElementById('clubCategory').innerText = 'Category: ' + currentClub.category;
+
+            loadAllData();
+        }
+
+        function loadAllData() {
+            loadRequests();
+            loadMembers();
+            loadAdmins();
+            loadEvents();
+            loadQuestions();
+            updateNotificationCount();
+        }
+
+        function loadRequests() {
+            const requestsList = document.getElementById('requestsList');
+            const requestCount = document.getElementById('requestCount');
+            
+            requestsList.innerHTML = '';
+            
+            if (currentClub.joinRequests && currentClub.joinRequests.length > 0) {
+                let pendingCount = 0;
+                
+                for (let i = currentClub.joinRequests.length - 1; i >= 0; i--) {
+                    const request = currentClub.joinRequests[i];
+                    if (request.status === 'pending') {
+                        pendingCount++;
+                        requestsList.innerHTML += `
+                            <div class="member-item">
+                                <div class="member-info">
+                                    <h4>${request.studentName}</h4>
+                                    <p>${request.studentEmail}</p>
+                                    <div class="member-joined">Requested: ${request.date}</div>
+                                </div>
+                                <div class="request-actions">
+                                    <button class="approve-btn" onclick="handleRequest(${request.id}, 'approve')">Approve</button>
+                                    <button class="reject-btn" onclick="handleRequest(${request.id}, 'reject')">Reject</button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                
+                requestCount.innerText = pendingCount;
+                
+                if (pendingCount === 0) {
+                    requestsList.innerHTML += '<div class="empty-state">No pending requests</div>';
+                }
+            } else {
+                requestCount.innerText = '0';
+                requestsList.innerHTML = '<div class="empty-state">No join requests</div>';
+            }
+        }
+
+        async function handleRequest(requestId, action) {
+            let joinRequests = [...(currentClub.joinRequests || [])];
+            
+            for (let i = 0; i < joinRequests.length; i++) {
+                if (joinRequests[i].id === requestId) {
+                    const request = joinRequests[i];
+                    request.status = action === 'approve' ? 'approved' : 'rejected';
+                    
+                    if (action === 'approve') {
+                        // Add to members
+                        const members = [...(currentClub.members || [])];
+                        members.push({
+                            name: request.studentName,
+                            email: request.studentEmail,
+                            joinedDate: new Date().toLocaleDateString()
+                        });
+                        
+                        await updateClub(currentClub.id, { members: members });
+                        
+                        // Notify student
+                        await addNotification({
+                            to: request.studentEmail,
+                            title: 'Join Request Approved',
+                            message: `Your request to join ${currentClub.name} has been approved!`
+                        });
+                    } else {
+                        // Notify student
+                        await addNotification({
+                            to: request.studentEmail,
+                            title: 'Join Request Update',
+                            message: `Your request to join ${currentClub.name} has been reviewed.`
+                        });
+                    }
+                    break;
+                }
+            }
+            
+            await updateClub(currentClub.id, { joinRequests: joinRequests });
+            
+            // Refresh club data
+            currentClub = await getClubById(clubId);
+            loadRequests();
+            loadMembers();
+        }
+
+        function loadMembers() {
+            const membersList = document.getElementById('membersList');
+            const memberCount = document.getElementById('memberCount');
+            
+            membersList.innerHTML = '';
+            
+            if (currentClub.members && currentClub.members.length > 0) {
+                memberCount.innerText = currentClub.members.length;
+                
+                for (let i = 0; i < currentClub.members.length; i++) {
+                    const member = currentClub.members[i];
+                    membersList.innerHTML += `
+                        <div class="member-item">
+                            <div class="member-info">
+                                <h4>${member.name}</h4>
+                                <p>${member.email}</p>
+                                <div class="member-joined">Joined: ${member.joinedDate}</div>
+                            </div>
+                            <button class="remove-member" onclick="removeMember('${member.email}')">Remove</button>
+                        </div>
+                    `;
+                }
+            } else {
+                memberCount.innerText = '0';
+                membersList.innerHTML = '<div class="empty-state">No members yet</div>';
+            }
+        }
+
+        async function removeMember(email) {
+            if (!confirm('Remove this member from the club?')) return;
+            
+            const members = (currentClub.members || []).filter(m => m.email !== email);
+            await updateClub(currentClub.id, { members: members });
+            
+            currentClub = await getClubById(clubId);
+            loadMembers();
+        }
+
+        function loadAdmins() {
+            const adminsList = document.getElementById('adminsList');
+            adminsList.innerHTML = '';
+
+            for (let i = 0; i < currentClub.clubAdmins.length; i++) {
+                const adminEmail = currentClub.clubAdmins[i];
+                adminsList.innerHTML += `
+                    <div class="admin-tag">
+                        ${adminEmail}
+                        ${adminEmail !== currentUser.email ? 
+                            `<span class="remove-admin" onclick="removeAdmin('${adminEmail}')">×</span>` : 
+                            ' (You)'}
+                    </div>
+                `;
+            }
+        }
+
+        async function addAdmin() {
+            const email = document.getElementById('newAdminEmail').value.trim();
+            if (!email) {
+                alert('Please enter an email');
+                return;
+            }
+
+            if (currentClub.clubAdmins.includes(email)) {
+                alert('This user is already an admin');
+                return;
+            }
+
+            const clubAdmins = [...currentClub.clubAdmins, email];
+            await updateClub(currentClub.id, { clubAdmins: clubAdmins });
+            
+            currentClub = await getClubById(clubId);
+            document.getElementById('newAdminEmail').value = '';
+            loadAdmins();
+            alert('Admin added successfully');
+        }
+
+        async function removeAdmin(email) {
+            if (!confirm(`Remove ${email} from admins?`)) return;
+            
+            const clubAdmins = currentClub.clubAdmins.filter(e => e !== email);
+            await updateClub(currentClub.id, { clubAdmins: clubAdmins });
+            
+            currentClub = await getClubById(clubId);
+            loadAdmins();
+        }
+
+        function loadEvents() {
+            const eventsList = document.getElementById('eventsList');
+            const eventCount = document.getElementById('eventCount');
+            
+            eventsList.innerHTML = '';
+            
+            if (currentClub.events && currentClub.events.length > 0) {
+                eventCount.innerText = currentClub.events.length;
+                
+                for (let i = 0; i < currentClub.events.length; i++) {
+                    const event = currentClub.events[i];
+                    const registeredCount = event.registered ? event.registered.length : 0;
+                    
+                    eventsList.innerHTML += `
+                        <div class="event-item">
+                            <div class="event-header">
+                                <span class="event-name">${event.name}</span>
+                                <span class="event-date">${event.date}</span>
+                            </div>
+                            <div class="event-details">
+                                <div>Time: ${event.time}</div>
+                                <div>Venue: ${event.venue}</div>
+                                <div>${event.description}</div>
+                            </div>
+                            <div class="event-registrations">
+                                Registered: ${registeredCount} students
+                            </div>
+                            <div class="event-actions">
+                                <button class="view-registrations" onclick="viewRegistrations(${event.id})">View List</button>
+                                <button class="btn-danger" style="padding: 8px 16px;" onclick="deleteEvent(${event.id})">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                eventCount.innerText = '0';
+                eventsList.innerHTML = '<div class="empty-state">No events scheduled</div>';
+            }
+        }
+
+        async function addEvent() {
+            const name = document.getElementById('eventName').value.trim();
+            const date = document.getElementById('eventDate').value.trim();
+            const time = document.getElementById('eventTime').value.trim();
+            const venue = document.getElementById('eventVenue').value.trim();
+            const desc = document.getElementById('eventDesc').value.trim();
+            const formLink = document.getElementById('eventFormLink').value.trim();
+
+            if (!name || !date || !time || !venue) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            const newEvent = {
+                id: Date.now(),
+                name: name,
+                date: date,
+                time: time,
+                venue: venue,
+                description: desc,
+                formLink: formLink,
+                registered: []
+            };
+
+            const events = [...(currentClub.events || []), newEvent];
+            await updateClub(currentClub.id, { events: events });
+            
+            // Clear form
+            document.getElementById('eventName').value = '';
+            document.getElementById('eventDate').value = '';
+            document.getElementById('eventTime').value = '';
+            document.getElementById('eventVenue').value = '';
+            document.getElementById('eventDesc').value = '';
+            document.getElementById('eventFormLink').value = '';
+            
+            currentClub = await getClubById(clubId);
+            loadEvents();
+            alert('Event added successfully!');
+        }
+
+        async function deleteEvent(eventId) {
+            if (!confirm('Delete this event?')) return;
+            
+            const events = (currentClub.events || []).filter(e => e.id !== eventId);
+            await updateClub(currentClub.id, { events: events });
+            
+            currentClub = await getClubById(clubId);
+            loadEvents();
+        }
+
+        function viewRegistrations(eventId) {
+            const event = (currentClub.events || []).find(e => e.id === eventId);
+            
+            if (!event || !event.registered || event.registered.length === 0) {
+                alert('No students registered yet');
+                return;
+            }
+            
+            let studentList = 'Registered Students:\n';
+            for (let i = 0; i < event.registered.length; i++) {
+                studentList += `${event.registered[i].name} (${event.registered[i].email})\n`;
+            }
+            alert(studentList);
+        }
+
+        function loadQuestions() {
+            const questionsList = document.getElementById('questionsList');
+            const questionCount = document.getElementById('questionCount');
+            
+            questionsList.innerHTML = '';
+            
+            if (currentClub.questions && currentClub.questions.length > 0) {
+                let pendingCount = 0;
+                
+                // Sort: pending first, then answered
+                const pending = [];
+                const answered = [];
+                
+                for (let i = 0; i < currentClub.questions.length; i++) {
+                    const q = currentClub.questions[i];
+                    if (!q.answer) {
+                        pending.push(q);
+                    } else {
+                        answered.push(q);
+                    }
+                }
+                
+                const sortedQuestions = [...pending, ...answered];
+                pendingCount = pending.length;
+                
+                for (let i = 0; i < sortedQuestions.length; i++) {
+                    const q = sortedQuestions[i];
+                    
+                    questionsList.innerHTML += `
+                        <div class="question-item ${q.answer ? 'answered' : ''}">
+                            <div class="question-text">${q.text}</div>
+                            <div class="question-meta">Asked on ${q.date}</div>
+                            ${q.answer ? 
+                                `<div class="existing-answer">
+                                    <p><strong>Answer:</strong> ${q.answer}</p>
+                                    <div class="answer-date">Answered on ${q.answeredDate}</div>
+                                </div>` :
+                                `<div class="answer-section">
+                                    <textarea id="answer_${i}" rows="2" placeholder="Type your answer..."></textarea>
+                                    <button class="answer-btn" onclick="answerQuestion(${i})">Submit Answer</button>
+                                </div>`
+                            }
+                        </div>
+                    `;
+                }
+                
+                questionCount.innerText = pendingCount + ' pending';
+            } else {
+                questionCount.innerText = '0';
+                questionsList.innerHTML = '<div class="empty-state">No questions yet</div>';
+            }
+        }
+
+        async function answerQuestion(index) {
+            const answer = document.getElementById(`answer_${index}`).value.trim();
+            if (!answer) {
+                alert('Please enter an answer');
+                return;
+            }
+
+            // Find the question (it's the 'index'th unanswered question)
+            let unansweredCount = 0;
+            const questions = [...(currentClub.questions || [])];
+            
+            for (let i = 0; i < questions.length; i++) {
+                if (!questions[i].answer) {
+                    if (unansweredCount === index) {
+                        questions[i].answer = answer;
+                        questions[i].answeredDate = new Date().toLocaleDateString();
+                        break;
+                    }
+                    unansweredCount++;
+                }
+            }
+            
+            await updateClub(currentClub.id, { questions: questions });
+            
+            currentClub = await getClubById(clubId);
+            loadQuestions();
+        }
+
+        async function updateNotificationCount() {
+            const count = await getUnreadCount(currentUser.email);
+            document.getElementById('notificationCount').textContent = count;
+        }
+
+        function viewNotifications() {
+            window.location.href = 'notifications.html';
+        }
+
+        function goBack() {
+            window.location.href = 'club-admin-dashboard.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        // Initialize
+        loadClub();
+        
+        // Refresh data every 5 seconds
+        setInterval(async () => {
+            if (clubId) {
+                currentClub = await getClubById(clubId);
+                loadAllData();
+            }
+            updateNotificationCount();
+        }, 5000);
+    </script>
+</body>
+</html>

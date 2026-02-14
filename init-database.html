@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Initialize Database</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 40px;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 { color: #111827; margin-bottom: 20px; }
+        .status { margin: 20px 0; }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        a { color: #2563eb; text-decoration: none; font-weight: 600; }
+        a:hover { text-decoration: underline; }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="firebase-data.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Database Initialization</h1>
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+    // Initialize database reference
+    const database = firebase.database();
+
+    window.onload = async function() {
+        const status = document.getElementById('status');
+        
+        try {
+            status.innerHTML = '⏳ Connecting to Firebase...<br>';
+            
+            status.innerHTML += '✅ Firebase connected<br>';
+            
+            // Check if clubs already exist
+            const snapshot = await database.ref('clubs').once('value');
+            
+            if (snapshot.exists()) {
+                status.innerHTML += '⚠️ Database already has data!<br>';
+                status.innerHTML += '<h2 class="success">✅ <a href="index.html">Go to Login Page</a></h2>';
+                return;
+            }
+            
+            status.innerHTML += '📝 Creating default clubs...<br>';
+            
+            // Remove hardcoded IDs, let Firebase generate keys
+            const clubs = [
+                {
+                    name: "IEEE",
+                    description: "Tech based organization focused on innovation and coding.",
+                    category: "Technical",
+                    interactiveLevel: "Low",
+                    skills: ["Coding", "Electronics", "AI"],
+                    clubAdmins: ["ieee.admin@gect.edu"],
+                    members: [],
+                    joinRequests: [],
+                    questions: [],
+                    events: [
+                        { 
+                            name: "Hackathon", 
+                            date: "Feb 20", 
+                            time: "10:00 AM", 
+                            venue: "Lab 101", 
+                            description: "24-hour coding challenge",
+                            registered: [] 
+                        }
+                    ],
+                    joinFormLink: ""
+                },
+                {
+                    name: "IEDC",
+                    description: "Innovation & Entrepreneurship Development Cell.",
+                    category: "Technical",
+                    interactiveLevel: "Moderate",
+                    skills: ["Startup", "Marketing", "Leadership"],
+                    clubAdmins: ["iedc.admin@gect.edu"],
+                    members: [],
+                    joinRequests: [],
+                    questions: [],
+                    events: [],
+                    joinFormLink: ""
+                },
+                {
+                    name: "TinkerHub",
+                    description: "A community for tech enthusiasts to learn, build and collaborate.",
+                    category: "Technical",
+                    interactiveLevel: "High",
+                    skills: ["Innovation", "Project Development", "Open Source"],
+                    clubAdmins: ["tinkerhub.admin@gect.edu"],
+                    members: [],
+                    joinRequests: [],
+                    questions: [],
+                    events: [
+                        { 
+                            name: "Hackathon 2024", 
+                            date: "March 10", 
+                            time: "9:00 AM", 
+                            venue: "Innovation Lab", 
+                            description: "24-hour hackathon",
+                            registered: [] 
+                        }
+                    ],
+                    joinFormLink: ""
+                }
+            ];
+            
+            for (let club of clubs) {
+                await database.ref('clubs').push(club);
+                status.innerHTML += `✅ Created ${club.name}<br>`;
+            }
+            
+            // Create club admin user records
+            status.innerHTML += '📝 Creating club admin user records...<br>';
+            await createUser({
+                email: "ieee.admin@gect.edu",
+                name: "IEEE Admin",
+                role: "club-admin"
+            });
+            await createUser({
+                email: "iedc.admin@gect.edu",
+                name: "IEDC Admin",
+                role: "club-admin"
+            });
+            await createUser({
+                email: "tinkerhub.admin@gect.edu",
+                name: "TinkerHub Admin",
+                role: "club-admin"
+            });
+            status.innerHTML += '✅ Club admin users created<br>';
+            
+            status.innerHTML += '<h2 class="success">🎉 DATABASE READY!</h2>';
+            status.innerHTML += '<p>Now <strong>create the super admin in Authentication</strong> using <a href="create-super-admin.html">create-super-admin.html</a></p>';
+            status.innerHTML += '<p><a href="index.html">Go to Login Page</a></p>';
+            
+        } catch (error) {
+            status.innerHTML += `<div class="error">❌ ERROR: ${error.message}</div>`;
+            console.error(error);
+        }
+    };
+    </script>
+</body>
+</html>

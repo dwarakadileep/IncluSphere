@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <h2>Firebase Connection Test</h2>
+    <div id="result"></div>
+    <script>
+        const result = document.getElementById('result');
+        
+        if (typeof database !== 'undefined') {
+            result.innerHTML = '✅ database variable exists!';
+            result.innerHTML += '<br>🔍 Checking connection...';
+            
+            database.ref('.info/connected').on('value', (snap) => {
+                if (snap.val() === true) {
+                    result.innerHTML += '<br>✅ Connected to Firebase Realtime Database!';
+                } else {
+                    result.innerHTML += '<br>❌ Not connected to database';
+                }
+            });
+        } else {
+            result.innerHTML = '❌ database variable is not defined. Fix firebase-config.js';
+        }
+    </script>
+</body>
+</html>

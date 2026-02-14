@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Club Admin Dashboard - GECT Club Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f3f4f6;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 0 40px;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: #4b5563;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            background: #f3f4f6;
+            color: #2563eb;
+        }
+
+        .admin-badge {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 15px;
+            background: #f9fafb;
+            border-radius: 100px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #2563eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #ef4444;
+            color: white;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
+        .logout-btn {
+            background: none;
+            border: 1px solid #e5e7eb;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: #6b7280;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #fee2e2;
+            border-color: #fecaca;
+            color: #dc2626;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 40px;
+        }
+
+        .welcome-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid #f0f0f0;
+        }
+
+        .welcome-title {
+            font-size: 28px;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .welcome-subtitle {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid #f0f0f0;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .stat-change {
+            color: #10b981;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: #111827;
+        }
+
+        .view-all {
+            color: #2563eb;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .notifications-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid #f0f0f0;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border-left: 4px solid #2563eb;
+            transition: transform 0.2s;
+        }
+
+        .activity-item:hover {
+            transform: translateX(5px);
+            background: white;
+        }
+
+        .activity-info h4 {
+            color: #111827;
+            margin-bottom: 4px;
+            font-size: 15px;
+        }
+
+        .activity-info p {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .activity-time {
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        .activity-badge {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .clubs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .club-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .club-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            border-color: #2563eb;
+        }
+
+        .club-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .club-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .club-badge {
+            background: #eef2ff;
+            color: #2563eb;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .club-description {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .club-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 15px 0;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 20px;
+        }
+
+        .club-stat-item {
+            text-align: center;
+        }
+
+        .club-stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .club-stat-label {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        .manage-btn {
+            width: 100%;
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .manage-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 20px;
+            color: #9ca3af;
+        }
+
+        .empty-state p {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 20px;
+            }
+            .container {
+                padding: 20px;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="firebase-data.js"></script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-brand">GECT Club Hub</div>
+        <div class="nav-links">
+            <a href="club-admin-dashboard.html" class="active">Dashboard</a>
+            <a href="dashboard.html">Student View</a>
+            <span class="admin-badge">Club Admin</span>
+            <div class="user-menu">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar"></div>
+                    <span class="user-name" id="welcomeUser"></span>
+                </div>
+                <button class="notification-btn" onclick="viewNotifications()">
+                    Notifications
+                    <span class="notification-count" id="notificationCount">0</span>
+                </button>
+                <button class="logout-btn" onclick="logout()">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1 class="welcome-title" id="welcomeMessage"></h1>
+            <p class="welcome-subtitle">Manage your clubs, approve requests, and engage with members.</p>
+        </div>
+
+        <div class="stats-grid" id="statsGrid"></div>
+
+        <div class="section-header">
+            <h2 class="section-title">Recent Notifications</h2>
+            <span class="view-all" onclick="viewNotifications()">View All</span>
+        </div>
+
+        <div class="notifications-section">
+            <div class="activity-list" id="notificationsList">
+                <div class="empty-state">Loading notifications...</div>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <h2 class="section-title">Your Clubs</h2>
+            <span class="view-all" id="clubCount"></span>
+        </div>
+
+        <div class="clubs-grid" id="clubsGrid"></div>
+    </div>
+
+    <script>
+        let currentUser = getCurrentUser();
+        let managedClubs = [];
+        
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        }
+        
+        if (currentUser.role !== 'club-admin') {
+            window.location.href = 'dashboard.html';
+        }
+        
+        document.getElementById('welcomeUser').textContent = currentUser.name;
+        document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+        document.getElementById('welcomeMessage').textContent = 'Welcome, ' + currentUser.name + '!';
+
+        async function loadData() {
+            await loadAdminClubs();
+            await loadNotifications();
+            await updateNotificationCount();
+        }
+
+        async function loadAdminClubs() {
+            managedClubs = await getClubsByAdmin(currentUser.email);
+            document.getElementById('clubCount').textContent = managedClubs.length + ' clubs';
+            
+            if (managedClubs.length === 0) {
+                document.getElementById('clubsGrid').innerHTML = `
+                    <div class="empty-state">
+                        <p>You are not an admin of any clubs yet.</p>
+                        <p style="font-size: 13px;">Contact super admin to assign you as club admin.</p>
+                    </div>
+                `;
+                document.getElementById('statsGrid').innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-label">No clubs assigned</div>
+                        <div class="stat-number">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">No clubs assigned</div>
+                        <div class="stat-number">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">No clubs assigned</div>
+                        <div class="stat-number">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">No clubs assigned</div>
+                        <div class="stat-number">0</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            updateStats();
+            displayClubs();
+        }
+
+        function updateStats() {
+            let totalMembers = 0;
+            let pendingRequests = 0;
+            let pendingQuestions = 0;
+            let upcomingEvents = 0;
+
+            for (let i = 0; i < managedClubs.length; i++) {
+                const club = managedClubs[i];
+                totalMembers += club.members ? club.members.length : 0;
+                
+                if (club.joinRequests) {
+                    for (let j = 0; j < club.joinRequests.length; j++) {
+                        if (club.joinRequests[j].status === 'pending') {
+                            pendingRequests++;
+                        }
+                    }
+                }
+                
+                if (club.questions) {
+                    for (let j = 0; j < club.questions.length; j++) {
+                        if (!club.questions[j].answer) {
+                            pendingQuestions++;
+                        }
+                    }
+                }
+                
+                upcomingEvents += club.events ? club.events.length : 0;
+            }
+
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">Total Members</div>
+                    <div class="stat-number">${totalMembers}</div>
+                    <div class="stat-change">Across all clubs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Pending Requests</div>
+                    <div class="stat-number">${pendingRequests}</div>
+                    <div class="stat-change">Need approval</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Questions</div>
+                    <div class="stat-number">${pendingQuestions}</div>
+                    <div class="stat-change">Need answers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Events</div>
+                    <div class="stat-number">${upcomingEvents}</div>
+                    <div class="stat-change">Upcoming</div>
+                </div>
+            `;
+        }
+
+        async function loadNotifications() {
+            const list = document.getElementById('notificationsList');
+            const notifications = await getUserNotifications(currentUser.email);
+            
+            if (notifications.length === 0) {
+                list.innerHTML = '<div class="empty-state">No new notifications</div>';
+                return;
+            }
+            
+            const recentNotifications = notifications.slice(0, 5);
+            let html = '';
+            
+            for (let i = 0; i < recentNotifications.length; i++) {
+                const notif = recentNotifications[i];
+                const bgColor = notif.read ? '#f9fafb' : '#eef2ff';
+                const borderColor = notif.read ? '#e5e7eb' : '#2563eb';
+                
+                html += `
+                    <div class="activity-item" style="background: ${bgColor}; border-left-color: ${borderColor};">
+                        <div class="activity-info">
+                            <h4>${notif.title}</h4>
+                            <p>${notif.message}</p>
+                        </div>
+                        <div>
+                            <span class="activity-time">${notif.date}</span>
+                            ${!notif.read ? '<span class="activity-badge">New</span>' : ''}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            list.innerHTML = html;
+        }
+
+        async function updateNotificationCount() {
+            const count = await getUnreadCount(currentUser.email);
+            document.getElementById('notificationCount').textContent = count;
+        }
+
+        function viewNotifications() {
+            window.location.href = 'notifications.html';
+        }
+
+        function displayClubs() {
+            const grid = document.getElementById('clubsGrid');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < managedClubs.length; i++) {
+                const club = managedClubs[i];
+                const memberCount = club.members ? club.members.length : 0;
+                
+                let requestCount = 0;
+                if (club.joinRequests) {
+                    for (let j = 0; j < club.joinRequests.length; j++) {
+                        if (club.joinRequests[j].status === 'pending') {
+                            requestCount++;
+                        }
+                    }
+                }
+                
+                const eventCount = club.events ? club.events.length : 0;
+
+                grid.innerHTML += `
+                    <div class="club-card" onclick="viewClub(${club.id})">
+                        <div class="club-header">
+                            <span class="club-name">${club.name}</span>
+                            <span class="club-badge">${club.category}</span>
+                        </div>
+                        <p class="club-description">${club.description.substring(0, 100)}...</p>
+                        <div class="club-stats">
+                            <div class="club-stat-item">
+                                <div class="club-stat-value">${memberCount}</div>
+                                <div class="club-stat-label">Members</div>
+                            </div>
+                            <div class="club-stat-item">
+                                <div class="club-stat-value">${requestCount}</div>
+                                <div class="club-stat-label">Requests</div>
+                            </div>
+                            <div class="club-stat-item">
+                                <div class="club-stat-value">${eventCount}</div>
+                                <div class="club-stat-label">Events</div>
+                            </div>
+                        </div>
+                        <button class="manage-btn" onclick="event.stopPropagation(); viewClub(${club.id})">Manage Club</button>
+                    </div>
+                `;
+            }
+        }
+
+        function viewClub(clubId) {
+            window.location.href = 'club-admin.html?clubId=' + clubId;
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        loadData();
+        setInterval(() => {
+            updateNotificationCount();
+            loadNotifications();
+        }, 5000);
+    </script>
+</body>
+</html>

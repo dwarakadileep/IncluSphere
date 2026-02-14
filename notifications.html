@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notifications - GECT Club Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f3f4f6;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 0 40px;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: #4b5563;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            background: #f3f4f6;
+            color: #2563eb;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 15px;
+            background: #f9fafb;
+            border-radius: 100px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #2563eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: none;
+            border: 1px solid #e5e7eb;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: #6b7280;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #fee2e2;
+            border-color: #fecaca;
+            color: #dc2626;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .back-btn {
+            background: white;
+            border: 1px solid #e5e7eb;
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #f9fafb;
+            transform: translateX(-3px);
+        }
+
+        .notifications-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid #f0f0f0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #111827;
+        }
+
+        .mark-read {
+            color: #2563eb;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .mark-read:hover {
+            text-decoration: underline;
+        }
+
+        .notifications-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .notification-item {
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #2563eb;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .notification-item:hover {
+            transform: translateX(5px);
+        }
+
+        .notification-item.unread {
+            background: #eef2ff;
+        }
+
+        .notification-item.read {
+            background: #f9fafb;
+            border-left-color: #9ca3af;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .notification-message {
+            color: #4b5563;
+            font-size: 14px;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .notification-date {
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+        }
+
+        .empty-state p {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 20px;
+            }
+            .header {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-brand">GECT Club Hub</div>
+        <div class="nav-links">
+            <a href="#" id="dashboardLink">Dashboard</a>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar"></div>
+                <span class="user-name" id="welcomeUser"></span>
+            </div>
+            <button class="logout-btn" onclick="logout()">Sign Out</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <button class="back-btn" onclick="goBack()"> Back to Dashboard</button>
+
+        <div class="notifications-card">
+            <div class="header">
+                <h1>Notifications</h1>
+                <span class="mark-read" onclick="markAllAsRead()">Mark all as read</span>
+            </div>
+
+            <div class="notifications-list" id="notificationsList">
+                <div class="empty-state">Loading notifications...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get current user
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        } else {
+            document.getElementById('welcomeUser').textContent = currentUser.name;
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            
+            // Set dashboard link based on role
+            const dashboardLink = document.getElementById('dashboardLink');
+            if (currentUser.role === 'super-admin') {
+                dashboardLink.href = 'website-admin-dashboard.html';
+            } else if (currentUser.role === 'club-admin') {
+                dashboardLink.href = 'club-admin-dashboard.html';
+            } else {
+                dashboardLink.href = 'dashboard.html';
+            }
+        }
+
+        // Load notifications
+        async function loadNotifications() {
+            const list = document.getElementById('notificationsList');
+            
+            try {
+                const snapshot = await database.ref('notifications').once('value');
+                const allNotifications = snapshot.val();
+                
+                if (!allNotifications) {
+                    list.innerHTML = '<div class="empty-state">No notifications yet</div>';
+                    return;
+                }
+                
+                // Filter notifications for current user
+                const userNotifications = [];
+                for (let key in allNotifications) {
+                    if (allNotifications[key].to === currentUser.email) {
+                        userNotifications.push({
+                            id: key,
+                            ...allNotifications[key]
+                        });
+                    }
+                }
+                
+                if (userNotifications.length === 0) {
+                    list.innerHTML = '<div class="empty-state">No notifications yet</div>';
+                    return;
+                }
+                
+                // Sort by date (newest first)
+                userNotifications.sort((a, b) => b.date.localeCompare(a.date));
+                
+                let html = '';
+                for (let i = 0; i < userNotifications.length; i++) {
+                    const notif = userNotifications[i];
+                    html += `
+                        <div class="notification-item ${notif.read ? 'read' : 'unread'}" onclick="markAsRead('${notif.id}')">
+                            <div class="notification-title">${notif.title}</div>
+                            <div class="notification-message">${notif.message}</div>
+                            <div class="notification-date">${notif.date}</div>
+                        </div>
+                    `;
+                }
+                
+                list.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+                list.innerHTML = '<div class="empty-state">Error loading notifications</div>';
+            }
+        }
+
+        // Mark single notification as read
+        async function markAsRead(notificationId) {
+            try {
+                await database.ref(`notifications/${notificationId}`).update({ read: true });
+                loadNotifications();
+            } catch (error) {
+                console.error('Error marking notification as read:', error);
+            }
+        }
+
+        // Mark all as read
+        async function markAllAsRead() {
+            try {
+                const snapshot = await database.ref('notifications').once('value');
+                const allNotifications = snapshot.val();
+                
+                for (let key in allNotifications) {
+                    if (allNotifications[key].to === currentUser.email && !allNotifications[key].read) {
+                        await database.ref(`notifications/${key}`).update({ read: true });
+                    }
+                }
+                
+                loadNotifications();
+                
+            } catch (error) {
+                console.error('Error marking all as read:', error);
+            }
+        }
+
+        // Go back to appropriate dashboard
+        function goBack() {
+            if (currentUser.role === 'super-admin') {
+                window.location.href = 'website-admin-dashboard.html';
+            } else if (currentUser.role === 'club-admin') {
+                window.location.href = 'club-admin-dashboard.html';
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        // Load notifications on page load
+        loadNotifications();
+        
+        // Refresh every 5 seconds
+        setInterval(loadNotifications, 5000);
+    </script>
+</body>
+</html>

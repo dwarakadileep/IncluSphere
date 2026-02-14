@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reset Database - GECT Club Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            width: 500px;
+            text-align: center;
+        }
+        h1 {
+            color: #111827;
+            margin-bottom: 20px;
+        }
+        .warning {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #b91c1c;
+        }
+        .success {
+            background: #dcfce7;
+            color: #166534;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        .error {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        .note {
+            color: #6b7280;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Reset Database</h1>
+        <p>This will clear all data and create 10 clubs.</p>
+        
+        <div class="warning">
+            Warning: This cannot be undone!
+        </div>
+        
+        <button onclick="resetDatabase()">Reset Database Now</button>
+        <div id="message"></div>
+        
+        <div class="note">
+            After reset, run <strong>create-super-admin.html</strong> to create admin
+        </div>
+    </div>
+
+    <script>
+    async function resetDatabase() {
+        if (!confirm('Are you sure? This will delete ALL data!')) return;
+        
+        const msg = document.getElementById('message');
+        msg.innerHTML = 'Processing...';
+        
+        try {
+            await database.ref().set(null);
+            
+            const clubs = [
+                {
+                    id: 1,
+                    name: "IEEE",
+                    description: "Institute of Electrical and Electronics Engineers - Technical society for engineering students focused on innovation and technology.",
+                    category: "Technical",
+                    skills: ["Coding", "Electronics", "AI/ML", "Robotics"],
+                    clubAdmins: ["ieee.admin@gect.edu"],
+                    members: [],
+                    joinRequests: [],
+                    questions: [],
+                    events: [
+                        { 
+                            id: 101, 
+                            name: "Tech Symposium", 
+                            date: "March 15", 
+                            time: "10:00 AM", 
+                            venue: "Main Auditorium", 
+                            description: "Annual technical symposium with workshops and competitions",
+                            registered: [] 
+                        },
+                        { 
+                            id: 102, 
+                            name: "Coding Workshop", 
+                            date: "March 20", 
+                            time: "2:00 PM", 
+                            venue: "Lab 101", 
+                            description: "Hands-on coding workshop on web development",
+                            registered: [] 
+                        }
+                    ],
+                    joinFormLink: ""
+                },
+                {
+                    id: 2,
+                    name: "IEDC",
+                    description: "Innovation and Entrepreneurship Development Cell - Fostering startup culture and entrepreneurial mindset among students.",
+                    category: "Technical",
+                    skills: ["Entrepreneurship", "Startup", "Business Planning", "Marketing"],
+                    clubAdmins: ["iedc.admin@gect.edu"],
+                    members: [],
+                    joinRequests: [],
+                    questions: [],
+                    events: [
+                        { 
+                            id: 201, 
+                            name: "Startup Bootcamp", 
+                            date: "March 10", 
+                            time: "9:00 AM", 
+                            venue: "Seminar Hall", 
+                            description: "3-day intensive bootcamp for aspiring entrepreneurs",
+                            registered: [] 
+                        }
+                    ],
+                    joinFormLink: ""
+                },
+                {
+                    id: 3,
+                    name: "TinkerHub",
+                    description: "A community of tinkers, makers and innovators collaborating on real-world projects and peer learning.",
+                    category: "Technical",
+                    skills: ["Innovation", "Project Development", "Open Source", "Peer Learning"],
+                    clubAdmins: ["tinkerhub.admin@gect.edu"],
+                    members: [],
+                    joinRequests: [],
+                    questions: [],
+                    events: [
+                        { 
+                            id: 301, 
+                            name: "Hackathon 2024", 
+                            date: "April 5", 
+                            time: "9:00 AM", 
+                            venue: "Innovation Lab", 
+                            description: "24-hour hackathon to build innovative solutions",
+                            registered: [] 
+                        },
+                        { 
+                            id: 302, 
+                            name: "Build with AI", 
+                            date: "March 25", 
+                            time: "2:00 PM", 
+                            venue: "Online", 
+                            description: "Workshop on building AI-powered applications",
+                            registered: [] 
+                        }
+                    ],
+                    joinFormLink: ""
+                },
+                {
+                    id: 4,
+                    name: "Bansuri - Music Club",
+                    description: "The official music club of GECT - for singers, instrumentalists, and music enthusiasts to learn and perform together.",
+                    category: "Cultural",
+                    skills: ["Singing", "Guitar", "Keyboard", "Music Production"],
+                    clubAdmins: ["bansuri.admin@gect.edu"],
+                    members: [],
+                    joinRequests: [],
+                    questions: [],
+                    events: [
+                        { 
+                            id: 401, 
+                            name: "Open Mic Night", 
+                            date: "March 18", 
+                            time: "6:00 PM", 
+                            venue: "Amphitheater", 
+                            description: "Monthly open mic event for performers",
+                            registered: [] 
+                        },
+                        { 
+                            id: 402, 
+                            name: "Music Workshop", 
+                            date: "March 22", 
+                            time: "3:00 PM", 
+                            venue: "Music Room", 
+                            description: "Learn music production basics",
+                            registered: [] 
+                        }
+                    ],
+                    joinFormLink: ""
+                },
+                {
+                    id: 5,
+                    name: "Fashion Club",
+                    description: "For fashion enthusiasts - explore design, styling, modeling, and fashion event management.",
+                    category: "Cultural",
+                    skills: ["Fashion Design", "Styling", "Modeling", "Event Management"],
+                    clubAdmins: ["fashion.admin@gect.edu"],
+                    members: [],
+                    joinRequests: [],
+                    questions: [],
+                    events: [
+                        { 
+                            id: 501, 
+                            name: "Fashion Show", 
+                            date: "April 10", 
+                            time: "5:00 PM", 
+                            venue: "Main Auditorium", 
+                            description: "Annual fashion showcase",
+                            registered: [] 
+                        }
+                    ],
+                    joinFormLink: ""
+                },
+                {
+                    id: 6,
+                    name: "Sports Club",
+                    description: "Promoting sports and fitness activities across campus. Organize tournaments and practice sessions.",
+                    category: "Sports",
+                    skills: ["Cricket", "Football", "Basketball", "Athletics"],
+                    clubAdmins: ["sports.admin@gect.edu"],
+                    members: [],
+                    joinRequests: [],
+                    questions: [],
+                    events: [
+                        { 
+                            id: 601, 
+                            name: "Inter-College Tournament", 
+                            date: "March 25", 
+                            time: "8:00 AM", 
+                            venue: "Sports Ground", 
+                            description: "Annual sports meet with multiple colleges",
+                            registered: [] 
+                        },
+                        { 
+                            id: 602, 
+                            name: "Cricket League", 
+                            date: "Every Friday", 
+                            time: "3:00 PM", 
+                            venue: "Cricket Ground", 
+                            description: "Weekly cricket matches",
+                            registered: [] 
+                        }
+                    ],
+                    joinFormLink: ""
+                },
+                {
+                    id: 7,
+                    name: "Dance Club",
+                    description: "A community for dance enthusiasts - learn various dance forms, choreograph, and perform at events.",
+                    category: "Cultural",
+                    skills: ["Contemporary", "Hip-Hop", "Classical", "Choreography"],
+                    clubAdmins: ["dance.admin@gect.edu"],
+                    members: [],
+                    joinRequests: [],
+                    questions: [],
+                    events: [
+                        { 
+                            id: 701, 
+                            name: "Dance Workshop", 
+                            date: "March 12", 
+                            time: "5:00 PM", 
+                            venue: "Dance Studio", 
+                            description: "Learn contemporary dance basics",
+                            registered: [] 
+                        }
+                    ],
+                    joinFormLink: ""
+                },
+                {
+                    id: 8,
+                    name: "Automobiles Club",
+                    description: "For automotive enthusiasts - explore vehicle technology, organize rallies, and work on projects.",
+                    category: "Technical",
+                    skills: ["Automotive Engineering", "Vehicle Design", "Mechanics", "Rally Organization"],
+                    clubAdmins: ["auto.admin@gect.edu"],
+                    members: [],
+                    joinRequests: [],
+                    questions: [],
+                    events: [
+                        { 
+                            id: 801, 
+                            name: "Auto Expo", 
+                            date: "April 2", 
+                            time: "10:00 AM", 
+                            venue: "Mechanical Block", 
+                            description: "Showcase of student-built vehicles",
+                            registered: [] 
+                        }
+                    ],
+                    joinFormLink: ""
+                },
+                {
+                    id: 9,
+                    name: "Drama Club",
+                    description: "Theatre and drama enthusiasts - act, direct, write scripts, and stage plays throughout the year.",
+                    category: "Cultural",
+                    skills: ["Acting", "Direction", "Script Writing", "Stage Management"],
+                    clubAdmins: ["drama.admin@gect.edu"],
+                    members: [],
+                    joinRequests: [],
+                    questions: [],
+                    events: [
+                        { 
+                            id: 901, 
+                            name: "Drama Festival", 
+                            date: "March 28", 
+                            time: "6:00 PM", 
+                            venue: "Open Air Theatre", 
+                            description: "Annual drama competition",
+                            registered: [] 
+                        }
+                    ],
+                    joinFormLink: ""
+                },
+                {
+                    id: 10,
+                    name: "Photography Club",
+                    description: "For photography enthusiasts - learn techniques, organize shoots, and exhibit work.",
+                    category: "Cultural",
+                    skills: ["Photography", "Editing", "Videography", "Lighting"],
+                    clubAdmins: ["photo.admin@gect.edu"],
+                    members: [],
+                    joinRequests: [],
+                    questions: [],
+                    events: [
+                        { 
+                            id: 1001, 
+                            name: "Photo Walk", 
+                            date: "March 16", 
+                            time: "7:00 AM", 
+                            venue: "Campus", 
+                            description: "Morning photography walk",
+                            registered: [] 
+                        },
+                        { 
+                            id: 1002, 
+                            name: "Exhibition", 
+                            date: "April 5", 
+                            time: "10:00 AM", 
+                            venue: "Gallery Hall", 
+                            description: "Annual photography exhibition",
+                            registered: [] 
+                        }
+                    ],
+                    joinFormLink: ""
+                }
+            ];
+            
+            for (let club of clubs) {
+                await database.ref('clubs').push(club);
+            }
+            
+            msg.innerHTML = '<div class="success">✅ Database reset successfully!</div>';
+            msg.innerHTML += '<br><a href="create-super-admin.html">Create Super Admin →</a>';
+            
+        } catch (error) {
+            msg.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+        }
+    }
+    </script>
+</body>
+</html>

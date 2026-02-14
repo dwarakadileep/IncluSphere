@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Club Details - GECT Club Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f3f4f6;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 0 40px;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #4b5563;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 8px 20px;
+            background: #f9fafb;
+            border-radius: 50px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .user-name {
+            color: #111827;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: none;
+            border: 1px solid #e5e7eb;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: #6b7280;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .back-btn {
+            background: white;
+            border: 1px solid #e5e7eb;
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin: 20px 40px;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #f9fafb;
+            transform: translateX(-5px);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px 40px;
+        }
+
+        .club-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid #f0f0f0;
+        }
+
+        .club-category-badge {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .club-title {
+            font-size: 36px;
+            color: #111827;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .club-description {
+            color: #4b5563;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .club-meta {
+            display: flex;
+            gap: 30px;
+            margin: 20px 0;
+            color: #6b7280;
+        }
+
+        .admin-list {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .admin-list strong {
+            color: #2563eb;
+        }
+
+        .skills-container {
+            margin: 20px 0;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background: #eef2ff;
+            color: #2563eb;
+            padding: 6px 16px;
+            border-radius: 50px;
+            margin: 5px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .join-section {
+            background: #f9fafb;
+            border: 2px dashed #2563eb;
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .join-section h3 {
+            color: #111827;
+            margin-bottom: 10px;
+        }
+
+        .join-button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .join-button:hover {
+            background: #1d4ed8;
+        }
+
+        .join-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .membership-status {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 500;
+            margin-top: 15px;
+        }
+
+        .status-member {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fcd34d;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid #f0f0f0;
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: #111827;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .event-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .event-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 10px;
+        }
+
+        .event-detail {
+            color: #6b7280;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .question-input-container {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .question-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        .question-textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .submit-question-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .question-item {
+            background: #f9fafb;
+            border-left: 4px solid #2563eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .question-meta {
+            color: #9ca3af;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .answer-box {
+            background: #dcfce7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .pending-badge {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #9ca3af;
+            padding: 40px;
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="firebase-data.js"></script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-brand">GECT Club Hub</div>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <div class="user-info">
+                <span class="user-name" id="welcomeUser"></span>
+                <button class="logout-btn" onclick="logout()">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <button class="back-btn" onclick="goBack()">Back to Clubs</button>
+
+    <div class="container">
+        <div id="clubContent"></div>
+        <div class="section-card" id="eventsSection" style="display: none;"></div>
+        <div class="section-card" id="questionsSection"></div>
+    </div>
+
+    <script>
+        const currentUser = getCurrentUser();
+        let currentClub = null;
+        
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        } else {
+            document.getElementById('welcomeUser').textContent = currentUser.name;
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const clubName = urlParams.get('name');
+
+        async function loadClub() {
+            currentClub = await getClubByName(clubName);
+            if (!currentClub) return;
+            
+            displayClub();
+            displayEvents();
+            displayQuestions();
+        }
+
+        function displayClub() {
+            const container = document.getElementById('clubContent');
+            
+            let isMember = false;
+            if (currentClub.members) {
+                for (let i = 0; i < currentClub.members.length; i++) {
+                    if (currentClub.members[i].email === currentUser.email) {
+                        isMember = true;
+                        break;
+                    }
+                }
+            }
+            
+            let hasPendingRequest = false;
+            if (currentClub.joinRequests) {
+                for (let i = 0; i < currentClub.joinRequests.length; i++) {
+                    if (currentClub.joinRequests[i].studentEmail === currentUser.email && 
+                        currentClub.joinRequests[i].status === 'pending') {
+                        hasPendingRequest = true;
+                        break;
+                    }
+                }
+            }
+            
+            let adminsText = '';
+            if (currentClub.clubAdmins && currentClub.clubAdmins.length > 0) {
+                adminsText = '<div class="admin-list"><strong>Administrators:</strong> ' + 
+                            currentClub.clubAdmins.join(' · ') + '</div>';
+            }
+            
+            let skillsHtml = '';
+            if (currentClub.skills && currentClub.skills.length > 0) {
+                skillsHtml = '<div class="skills-container">';
+                for (let i = 0; i < currentClub.skills.length; i++) {
+                    skillsHtml += '<span class="skill-tag">' + currentClub.skills[i] + '</span>';
+                }
+                skillsHtml += '</div>';
+            }
+            
+            let joinButtonHtml = '';
+            if (isMember) {
+                joinButtonHtml = '<span class="membership-status status-member">You are a member</span>';
+            } else if (hasPendingRequest) {
+                joinButtonHtml = '<span class="membership-status status-pending">Request pending approval</span>';
+            } else {
+                joinButtonHtml = '<button class="join-button" onclick="requestToJoin()">Request to Join</button>';
+            }
+            
+            container.innerHTML = `
+                <div class="club-card">
+                    <span class="club-category-badge">${currentClub.category}</span>
+                    <h1 class="club-title">${currentClub.name}</h1>
+                    <p class="club-description">${currentClub.description}</p>
+                    
+                    <div class="club-meta">
+                        <span>Members: ${currentClub.members ? currentClub.members.length : 0}</span>
+                        <span>Events: ${currentClub.events ? currentClub.events.length : 0}</span>
+                    </div>
+                    
+                    ${adminsText}
+                    ${skillsHtml}
+                    
+                    <div class="join-section">
+                        <h3>Become a Member</h3>
+                        <p>Join this club to participate in events and connect with members.</p>
+                        ${joinButtonHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayEvents() {
+            const section = document.getElementById('eventsSection');
+            if (!currentClub.events || currentClub.events.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            
+            section.style.display = 'block';
+            let eventsHtml = '<h2 class="section-title">Upcoming Events</h2><div class="events-grid">';
+            
+            for (let i = 0; i < currentClub.events.length; i++) {
+                const event = currentClub.events[i];
+                eventsHtml += `
+                    <div class="event-card">
+                        <div class="event-name">${event.name}</div>
+                        <div class="event-detail">Date: ${event.date}</div>
+                        <div class="event-detail">Time: ${event.time}</div>
+                        <div class="event-detail">Venue: ${event.venue}</div>
+                        <div class="event-detail">${event.description}</div>
+                    </div>
+                `;
+            }
+            
+            eventsHtml += '</div>';
+            section.innerHTML = eventsHtml;
+        }
+
+        async function requestToJoin() {
+            const request = {
+                id: Date.now(),
+                studentName: currentUser.name,
+                studentEmail: currentUser.email,
+                date: new Date().toLocaleDateString(),
+                status: 'pending'
+            };
+
+            const joinRequests = currentClub.joinRequests || [];
+            joinRequests.push(request);
+            
+            await updateClub(currentClub.id, { joinRequests: joinRequests });
+
+            if (currentClub.clubAdmins) {
+                for (let i = 0; i < currentClub.clubAdmins.length; i++) {
+                    await addNotification({
+                        to: currentClub.clubAdmins[i],
+                        title: 'New Join Request',
+                        message: currentUser.name + ' has requested to join ' + currentClub.name
+                    });
+                }
+            }
+
+            alert('Join request sent successfully!');
+            displayClub();
+        }
+
+        async function addQuestion() {
+            const input = document.getElementById('questionInput');
+            if (!input) return;
+            
+            const text = input.value.trim();
+            if (!text) {
+                alert('Please enter a question');
+                return;
+            }
+
+            const question = {
+                id: Date.now(),
+                text: text,
+                date: new Date().toLocaleDateString(),
+                askedBy: 'Anonymous'
+            };
+
+            const questions = currentClub.questions || [];
+            questions.push(question);
+            
+            await updateClub(currentClub.id, { questions: questions });
+
+            if (currentClub.clubAdmins) {
+                for (let i = 0; i < currentClub.clubAdmins.length; i++) {
+                    await addNotification({
+                        to: currentClub.clubAdmins[i],
+                        title: 'New Question',
+                        message: text.substring(0, 50) + (text.length > 50 ? '...' : '')
+                    });
+                }
+            }
+
+            input.value = '';
+            displayQuestions();
+            alert('Question submitted!');
+        }
+
+        function displayQuestions() {
+            const section = document.getElementById('questionsSection');
+            
+            let questionsHtml = '<h2 class="section-title">Questions & Answers</h2>';
+            
+            questionsHtml += `
+                <div class="question-input-container">
+                    <textarea class="question-textarea" id="questionInput" placeholder="Ask a question anonymously..."></textarea>
+                    <button class="submit-question-btn" onclick="addQuestion()">Submit Question</button>
+                </div>
+            `;
+            
+            if (currentClub.questions && currentClub.questions.length > 0) {
+                for (let i = currentClub.questions.length - 1; i >= 0; i--) {
+                    const q = currentClub.questions[i];
+                    questionsHtml += '<div class="question-item">';
+                    questionsHtml += '<div class="question-text">' + q.text + '</div>';
+                    questionsHtml += '<div class="question-meta">Asked on ' + q.date + '</div>';
+                    
+                    if (q.answer) {
+                        questionsHtml += '<div class="answer-box"><strong>Answer:</strong> ' + q.answer + '</div>';
+                    } else {
+                        questionsHtml += '<span class="pending-badge">Awaiting answer</span>';
+                    }
+                    
+                    questionsHtml += '</div>';
+                }
+            } else {
+                questionsHtml += '<div class="no-data">No questions yet. Be the first to ask!</div>';
+            }
+            
+            section.innerHTML = questionsHtml;
+        }
+
+        function goBack() {
+            window.location.href = 'dashboard.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        loadClub();
+    </script>
+</body>
+</html>

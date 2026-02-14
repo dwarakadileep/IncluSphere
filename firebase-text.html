@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firebase Test</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <h1>Firebase Connection Test</h1>
+    <div id="status"></div>
+    <button onclick="testConnection()">Test Connection</button>
+
+    <script>
+        function testConnection() {
+            const status = document.getElementById('status');
+            status.innerHTML = 'Testing...';
+            
+            try {
+                if (typeof database === 'undefined') {
+                    status.innerHTML = '❌ ERROR: database is not defined. Check firebase-config.js';
+                    return;
+                }
+                
+                // Try to write test data
+                database.ref('test').set({
+                    message: 'Connection successful!',
+                    timestamp: new Date().toString()
+                }).then(() => {
+                    status.innerHTML = '✅ SUCCESS! Firebase is working!<br>Check your Realtime Database to see the test data.';
+                }).catch(error => {
+                    status.innerHTML = '❌ ERROR: ' + error.message;
+                });
+            } catch (error) {
+                status.innerHTML = '❌ ERROR: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
